@@ -8,10 +8,9 @@ The tool reads 2 or more files.
 The first being the reference or source file.
 Each additional file is sync-ed with the source file:
 
-- if a key is missing in the target file then add it
-- if a key is no longer in the source file then remove it
+- if a key is missing in the target file then add it 
 
-All files are written back when entries sorted by key.
+All files are written back with entries sorted by key.
 
 ## install
 
@@ -22,4 +21,4 @@ All files are written back when entries sorted by key.
     arb <source.arb> <target_nl.arb> <target_de.arb> ...
 
 
-(c)2023. ernestmicklei.com
+(c) 2023. ernestmicklei.com. MIT license
