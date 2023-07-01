@@ -1,0 +1,13 @@
+{
+"@createdAgo":         {"placeholders":{"when":{"example":"Paar minuten","type":"String"}}}
+,
+"backToHome":          "?Back to home?",
+"backlog":             "Taken",
+"createdAgo":          "{when} geleden aangemaakt",
+"crushing":            "Tijd voor je Todo's",
+"high":                "?High?",
+"lastAdded":           "?last added?",
+"low":                 "?Low?",
+"minutes":             "?minutes?",
+"more":                "?More?"
+}
