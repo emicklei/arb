@@ -19,8 +19,12 @@ func (a ARB) JSON() []byte {
 	enc.SetIndent(strings.Repeat(" ", 20), "\t")
 	io.WriteString(b, "{\n")
 	keys := []string{}
+	maxKeyLength := 0
 	for k := range a {
 		keys = append(keys, k)
+		if len(k) > maxKeyLength {
+			maxKeyLength = len(k)
+		}
 	}
 	// put @ version below the one without
 	sort.Slice(keys, func(i, j int) bool {
@@ -39,7 +43,7 @@ func (a ARB) JSON() []byte {
 			fmt.Fprintf(b, ",\n")
 		}
 		v := a[k]
-		fmt.Fprintf(b, "%q:%s", k, padding(k))
+		fmt.Fprintf(b, "%q:%s", k, padding(k, maxKeyLength))
 		if s, ok := v.(string); ok {
 			fmt.Fprintf(b, "%q", s)
 		} else {
@@ -50,8 +54,8 @@ func (a ARB) JSON() []byte {
 	return b.Bytes()
 }
 
-func padding(key string) string {
-	return strings.Repeat(" ", 20-len(key))
+func padding(key string, maxKeyLength int) string {
+	return strings.Repeat(" ", maxKeyLength-len(key))
 }
 
 func main() {
@@ -72,13 +76,22 @@ func main() {
 
 func sync(source, target ARB) {
 	for ik, iv := range source {
-		if _, ok := target[ik]; !ok {
+		tv, ok := target[ik]
+		if !ok {
 			// no key in target
 			// value is string ?
 			if ivs, ok := iv.(string); ok {
 				target[ik] = fmt.Sprintf("?%s?", ivs)
 			} else {
 				target[ik] = iv
+			}
+		} else {
+			// key in target
+			// if value unknown then overwrite (again) from source
+			if tvs, ok := tv.(string); ok {
+				if strings.HasPrefix(tvs, "?") && strings.HasSuffix(tvs, "?") {
+					target[ik] = fmt.Sprintf("?%s?", iv)
+				}
 			}
 		}
 	}
